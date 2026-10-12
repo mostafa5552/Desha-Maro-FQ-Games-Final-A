@@ -1,93 +1,313 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DESHA & MARO GAMES - Auth System</title>
-    <!-- مكتبة Supabase JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- أيقونات FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- ملف CSS -->
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>DESHA &amp; MARO FQ GAMES</title>
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-    <div class="app-container">
-        <!-- ================= 1. شاشة تسجيل الدخول وإنشاء الحساب ================= -->
-        <section id="auth-screen" class="screen active">
-            <div class="brand-header">
-                <h1 class="glitch-title">DESHA & MARO</h1>
-                <p class="tagline">FOOTBALL ENGINE</p>
-            </div>
+<!-- ============ 1) شاشة الترحيب ============ -->
+<div id="splash-screen" class="screen active">
+  <div class="splash-inner">
+    <img src="https://i.supaimg.com/9b836138-e901-4e3b-a57b-85af24b46cef/c19e453c-1c31-41e9-90d7-6e56189f017b.png" class="game-logo" alt="logo">
+    <h1 class="game-title">DESHA &amp; MARO <span>FQ GAMES</span></h1>
+    <div class="loading-bar"><div class="loading-fill"></div></div>
+    <div class="developer-box">
+      <img src="https://i.supaimg.com/9b836138-e901-4e3b-a57b-85af24b46cef/dcbe3ae7-7c18-43cf-8e70-c2b73089969e.png" class="dev-logo" alt="dev">
+      <span class="dev-name">تطوير: DESHA.245</span>
+    </div>
+  </div>
+</div>
 
-            <div class="card auth-card">
-                <!-- أزرار التنقل بين الدخول والتسجيل -->
-                <div class="auth-tabs">
-                    <button id="tab-login" class="tab-btn active" onclick="switchTab('login')">تسجيل الدخول</button>
-                    <button id="tab-signup" class="tab-btn" onclick="switchTab('signup')">حساب جديد</button>
-                </div>
+<!-- ============ 2) شاشة تسجيل الدخول / إنشاء حساب ============ -->
+<div id="auth-screen" class="screen">
+  <div class="auth-card">
+    <img src="https://i.supaimg.com/9b836138-e901-4e3b-a57b-85af24b46cef/c19e453c-1c31-41e9-90d7-6e56189f017b.png" class="auth-logo">
+    <h2 class="auth-title">DESHA &amp; MARO FQ</h2>
 
-                <!-- رسائل الخطأ أو النجاح -->
-                <div id="auth-message" class="message-box"></div>
-
-                <!-- نموذج الدخول والتسجيل -->
-                <form id="auth-form" onsubmit="handleAuthSubmit(event)">
-                    <!-- اسم المستخدم (يظهر فقط عند إنشاء حساب جديد) -->
-                    <div class="input-group" id="username-group" style="display: none;">
-                        <label for="auth-username"><i class="fa-solid fa-user"></i> اسم المستخدم (Username الفريد):</label>
-                        <input type="text" id="auth-username" placeholder="مثال: desha_king" autocomplete="off">
-                        <small class="hint">سيُستخدم هذا الاسم حصرياً للبحث عنك في المواجهات الأونلاين</small>
-                    </div>
-
-                    <!-- البريد الإلكتروني -->
-                    <div class="input-group">
-                        <label for="auth-email"><i class="fa-solid fa-envelope"></i> البريد الإلكتروني:</label>
-                        <input type="email" id="auth-email" required placeholder="name@example.com">
-                    </div>
-
-                    <!-- كلمة السر -->
-                    <div class="input-group">
-                        <label for="auth-password"><i class="fa-solid fa-lock"></i> كلمة السر:</label>
-                        <input type="password" id="auth-password" required placeholder="••••••••">
-                    </div>
-
-                    <!-- زر الإرسال الرئيسي -->
-                    <button type="submit" id="auth-submit-btn" class="btn btn-red">
-                        <i class="fa-solid fa-right-to-bracket"></i> دخول
-                    </button>
-                </form>
-
-                <div class="divider"><span>أو</span></div>
-
-                <!-- التسجيل عبر Google -->
-                <button type="button" class="btn btn-google" onclick="loginWithGoogle()">
-                    <i class="fa-brands fa-google"></i> المتابعة باستخدام Google
-                </button>
-            </div>
-        </section>
-
-        <!-- ================= 2. الشاشة الرئيسية بعد تسجيل الدخول ================= -->
-        <section id="main-screen" class="screen">
-            <div class="card dashboard-card">
-                <div class="user-header">
-                    <i class="fa-solid fa-circle-user avatar"></i>
-                    <h2 id="user-display-username">مرحباً بك!</h2>
-                    <p id="user-display-email" class="email-label">---</p>
-                </div>
-
-                <div class="status-box">
-                    <p><i class="fa-solid fa-check-circle"></i> تم تسجيل الدخول وربط Supabase بنجاح!</p>
-                </div>
-
-                <button class="btn btn-red-outline" onclick="logout()">
-                    <i class="fa-solid fa-power-off"></i> تسجيل الخروج
-                </button>
-            </div>
-        </section>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="login">تسجيل الدخول</button>
+      <button class="tab-btn" data-tab="signup">حساب جديد</button>
     </div>
 
-    <!-- ملف JS -->
-    <script src="script.js"></script>
+    <form id="login-form" class="auth-form active">
+      <input type="email" id="login-email" placeholder="البريد الإلكتروني" required>
+      <input type="password" id="login-pass" placeholder="كلمة السر" required>
+      <button type="submit" class="btn-primary">دخول</button>
+      <p class="auth-msg" id="login-msg"></p>
+    </form>
+
+    <form id="signup-form" class="auth-form">
+      <input type="text" id="signup-user" placeholder="اسم المستخدم" required>
+      <input type="email" id="signup-email" placeholder="البريد الإلكتروني" required>
+      <input type="password" id="signup-pass" placeholder="كلمة السر (6 حروف على الأقل)" required>
+      <button type="submit" class="btn-primary">إنشاء حساب</button>
+      <p class="auth-msg" id="signup-msg"></p>
+    </form>
+
+    <button class="btn-ghost" id="btn-guest">الدخول كزائر (أوفلاين فقط)</button>
+  </div>
+</div>
+
+<!-- ============ 3) القائمة الرئيسية ============ -->
+<div id="main-menu" class="screen">
+  <header class="top-bar">
+    <div class="user-info">
+      <img id="user-avatar" class="avatar" src="">
+      <span id="user-name-display">لاعب</span>
+    </div>
+    <button class="icon-btn" id="btn-settings">⚙</button>
+  </header>
+
+  <div class="menu-hero">
+    <img src="https://i.supaimg.com/9b836138-e901-4e3b-a57b-85af24b46cef/c19e453c-1c31-41e9-90d7-6e56189f017b.png" class="menu-logo">
+    <h2>DESHA &amp; MARO FQ</h2>
+  </div>
+
+  <div class="menu-buttons">
+    <button class="menu-btn primary" data-go="division-screen">
+      <span class="mb-icon">🏆</span>
+      <span class="mb-text">وضع الدفيجنات</span>
+    </button>
+    <button class="menu-btn" data-go="online-screen">
+      <span class="mb-icon">🌐</span>
+      <span class="mb-text">لعب أونلاين</span>
+    </button>
+    <button class="menu-btn" data-go="offline-screen">
+      <span class="mb-icon">🤖</span>
+      <span class="mb-text">وضع أوفلاين</span>
+    </button>
+    <button class="menu-btn" data-go="stats-screen">
+      <span class="mb-icon">📊</span>
+      <span class="mb-text">إحصائياتي</span>
+    </button>
+  </div>
+</div>
+
+<!-- ============ 4) شاشة اختيار صعوبة الأوفلاين ============ -->
+<div id="offline-screen" class="screen">
+  <button class="btn-back" data-back>← رجوع</button>
+  <h2 class="screen-title">اختر الصعوبة</h2>
+  <div class="diff-list">
+    <button class="diff-card" data-diff="easy">
+      <span class="diff-emoji">🙂</span>
+      <span class="diff-name">سهل</span>
+      <span class="diff-desc">سرعة رد بطيئة - إجابات تقريبية</span>
+    </button>
+    <button class="diff-card" data-diff="medium">
+      <span class="diff-emoji">😐</span>
+      <span class="diff-name">متوسط</span>
+      <span class="diff-desc">سرعة رد متوسطة - دقة جيدة</span>
+    </button>
+    <button class="diff-card" data-diff="hard">
+      <span class="diff-emoji">😈</span>
+      <span class="diff-name">صعب</span>
+      <span class="diff-desc">سرعة رد عالية - دقة عالية</span>
+    </button>
+  </div>
+</div>
+
+<!-- ============ 5) شاشة الدفيجنات ============ -->
+<div id="division-screen" class="screen">
+  <button class="btn-back" data-back>← رجوع</button>
+  <h2 class="screen-title">الدفيجنات</h2>
+  <div class="divisions-wrap" id="divisions-list">
+    <!-- تُبنى بالـJS -->
+  </div>
+</div>
+
+<!-- ============ 6) شاشة اختيار نوع اللعب (بعد اختيار دفيجن) ============ -->
+<div id="game-mode-screen" class="screen">
+  <button class="btn-back" data-back>← رجوع</button>
+  <h2 class="screen-title" id="gm-title">اختر نوع اللعب</h2>
+  <div class="mode-list">
+    <button class="mode-card" data-mode="quiz">
+      <div class="mode-icon">❓</div>
+      <h3>أسئلة كروية</h3>
+      <p>5 جولات - بيانات لاعب / سؤال عشوائي / مزاد / من هو لاعبي</p>
+    </button>
+    <button class="mode-card" data-mode="squad">
+      <div class="mode-icon">⚽</div>
+      <h3>كوّن تشكيلتك</h3>
+      <p>100 مليون - 5 مراكز - مزاد - محاكاة 60 ثانية</p>
+    </button>
+  </div>
+</div>
+
+<!-- ============ 7) شاشة الأونلاين (بحث أصدقاء) ============ -->
+<div id="online-screen" class="screen">
+  <button class="btn-back" data-back>← رجوع</button>
+  <h2 class="screen-title">لعب أونلاين</h2>
+
+  <div class="search-box">
+    <input type="text" id="friend-search" placeholder="اكتب اسم مستخدم صديقك...">
+    <button class="btn-primary" id="btn-search-friend">بحث</button>
+  </div>
+
+  <div class="search-results" id="search-results"></div>
+
+  <h3 class="sub-title">طلبات المباريات الواردة</h3>
+  <div class="requests-list" id="incoming-requests"></div>
+</div>
+
+<!-- ============ 8) شاشة الإحصائيات ============ -->
+<div id="stats-screen" class="screen">
+  <button class="btn-back" data-back>← رجوع</button>
+  <h2 class="screen-title">إحصائياتي</h2>
+  <div class="stats-grid">
+    <div class="stat-card"><span id="st-played">0</span><small>مباريات</small></div>
+    <div class="stat-card"><span id="st-wins">0</span><small>انتصارات</small></div>
+    <div class="stat-card"><span id="st-losses">0</span><small>هزائم</small></div>
+    <div class="stat-card"><span id="st-goals">0</span><small>أهداف</small></div>
+    <div class="stat-card"><span id="st-division">هاوي</span><small>الدفيجن</small></div>
+    <div class="stat-card"><span id="st-streak">0</span><small>سلسلة فوز</small></div>
+  </div>
+  <button class="btn-danger" id="btn-logout">تسجيل الخروج</button>
+</div>
+
+<!-- ============ 9) شاشة جيم بلاي: أسئلة كروية ============ -->
+<div id="quiz-game" class="screen">
+  <header class="match-bar">
+    <div class="player-score me">
+      <span id="quiz-my-name">أنا</span>
+      <b id="quiz-my-score">0</b>
+    </div>
+    <div class="round-indicator">
+      <small id="quiz-round-num">جولة 1 / 5</small>
+      <div class="timer-circle"><span id="quiz-timer">15</span></div>
+    </div>
+    <div class="player-score opp">
+      <span id="quiz-opp-name">خصم</span>
+      <b id="quiz-opp-score">0</b>
+    </div>
+  </header>
+
+  <div class="quiz-body">
+    <div class="question-box" id="quiz-question">...</div>
+    <div class="answers-area" id="quiz-answers"></div>
+    <div class="opp-log" id="quiz-opp-log"></div>
+  </div>
+
+  <button class="btn-danger btn-withdraw" data-withdraw>انسحاب من المباراة</button>
+</div>
+
+<!-- ============ 10) شاشة جيم بلاي: كوّن تشكيلتك ============ -->
+<div id="squad-game" class="screen">
+  <header class="match-bar">
+    <div class="money-box">
+      <small>ميزانيتك</small>
+      <b><span id="squad-money">100</span>M$</b>
+    </div>
+    <div class="round-indicator">
+      <small>المركز</small>
+      <b id="squad-position">حارس مرمى</b>
+    </div>
+    <div class="opp-info">
+      <small>الخصم</small>
+      <b id="squad-opp-name">خصم</b>
+    </div>
+  </header>
+
+  <div class="auction-area">
+    <div class="player-card-big" id="squad-player-card">
+      <div class="pc-name">—</div>
+      <div class="pc-info">—</div>
+      <div class="pc-price">السعر الحالي: <b id="squad-current-bid">0</b>M$</div>
+    </div>
+
+    <div class="auction-controls">
+      <button class="btn-bid" id="btn-raise-bid">+ مزايدة</button>
+      <button class="btn-primary" id="btn-take-player">خده خلاص</button>
+      <button class="btn-ghost" id="btn-pass-player">سيبها</button>
+    </div>
+  </div>
+
+  <div class="squad-slots" id="squad-slots">
+    <!-- 5 خانات -->
+  </div>
+
+  <button class="btn-danger btn-withdraw" data-withdraw>انسحاب من المباراة</button>
+</div>
+
+<!-- ============ 11) شاشة المحاكاة العرضية ============ -->
+<div id="simulation-screen" class="screen">
+  <h2 class="screen-title">المحاكاة العرضية</h2>
+  <div class="simulation-field" id="sim-field">
+    <!-- تتحدث بالـJS -->
+  </div>
+  <div class="sim-score">
+    <span id="sim-my-score">0</span> - <span id="sim-opp-score">0</span>
+  </div>
+  <div class="sim-timer">الوقت: <b id="sim-timer">60</b>ث</div>
+</div>
+
+<!-- ============ 12) شاشة النتيجة النهائية ============ -->
+<div id="result-screen" class="screen">
+  <div class="result-card">
+    <h1 id="result-title">فوز!</h1>
+    <div class="result-scores">
+      <div><small>أنت</small><b id="res-me">0</b></div>
+      <div><small>الخصم</small><b id="res-opp">0</b></div>
+    </div>
+    <p id="result-message">أحسنت!</p>
+    <div class="result-actions">
+      <button class="btn-primary" id="btn-rematch">مباراة جديدة</button>
+      <button class="btn-ghost" data-go="main-menu">القائمة الرئيسية</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 13) شاشة تحميل / مطابقة ============ -->
+<div id="loading-screen" class="screen">
+  <div class="loading-spinner"></div>
+  <p id="loading-text">جاري البحث عن خصم...</p>
+  <button class="btn-ghost" data-back>إلغاء</button>
+</div>
+
+<!-- ============ 14) شاشة الإعدادات ============ -->
+<div id="settings-screen" class="screen">
+  <button class="btn-back" data-back>← رجوع</button>
+  <h2 class="screen-title">الإعدادات</h2>
+  <div class="settings-list">
+    <label class="setting-row">
+      <span>الموسيقى</span>
+      <input type="checkbox" id="set-music" checked>
+    </label>
+    <label class="setting-row">
+      <span>الأصوات</span>
+      <input type="checkbox" id="set-sfx" checked>
+    </label>
+    <label class="setting-row">
+      <span>الاهتزاز</span>
+      <input type="checkbox" id="set-vibrate" checked>
+    </label>
+  </div>
+</div>
+
+<!-- ============ Toast للرسائل السريعة ============ -->
+<div id="toast" class="toast"></div>
+
+  <!-- Fallback: لو app.js فشل، انقل لشاشة الدخول -->
+<script>
+  (function() {
+    function goAuth() {
+      const splash = document.getElementById('splash-screen');
+      if (!splash || !splash.classList.contains('active')) return;
+      splash.classList.remove('active');
+      const auth = document.getElementById('auth-screen');
+      if (auth) auth.classList.add('active');
+      console.warn('[Fallback] Splash timeout → Auth screen');
+    }
+    setTimeout(goAuth, 3500);
+    setTimeout(goAuth, 6000); // محاولة تانية
+  })();
+</script>
+  
+ <!-- supabase JS v2 -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js"></script>
+  
 </body>
 </html>
